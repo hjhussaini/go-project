@@ -48,7 +48,7 @@ services:
     environment:
       - PORT=4000
       - DATABASE_URI=root:root@tcp(charge-db)/chargedb
-      - MAX_CHARGE=2
+      - MAX_CHARGE=1000
       - CHARGE_CREDIT=1000000
       - CHARGE_WALLET_API=http://wallet-service:5000/api/wallets
     ports:
