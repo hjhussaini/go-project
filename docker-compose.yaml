@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+  wallet-db:
+    container_name: db.wallet.com
+    image: mariadb:10.6
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=walletdb
+    volumes:
+      - ./data/wallet:/var/lib/mysql
+    networks:
+      - cloud_network
+
+  wallet-service:
+    container_name: wallet.service
+    image: wallet.service
+    build:
+      context: ./wallet
+    environment:
+      - PORT=5000
+      - DATABASE_URI=root:root@tcp(wallet-db)/walletdb
+    ports:
+            - 5000:5000
+    networks:
+      - cloud_network
+    links:
+      - wallet-db
+    depends_on:
+      - wallet-db
+
+  charge-db:
+    container_name: db.charge.com
+    image: mariadb:10.6
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=chargedb
+    volumes:
+      - ./data/charge:/var/lib/mysql
+    networks:
+      - cloud_network
+
+  charge-service:
+    container_name: charge.service
+    image: charge.service
+    build:
+      context: ./charge
+    environment:
+      - PORT=4000
+      - DATABASE_URI=root:root@tcp(charge-db)/chargedb
+      - MAX_CHARGE=2
+      - CHARGE_CREDIT=1000000
+      - CHARGE_WALLET_API=http://wallet-service:5000/api/wallets
+    ports:
+            - 4000:4000
+    networks:
+      - cloud_network
+    links:
+      - charge-db
+    depends_on:
+      - charge-db
+
+networks:
+  cloud_network:
+    driver: bridge
