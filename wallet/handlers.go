@@ -8,10 +8,6 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-type UserList struct {
-	Users	[]string	`json:"users"`
-}
-
 type Response struct {
 	OK	bool		`json:"ok"`
 	Message	string		`json:"message,omitempty"`

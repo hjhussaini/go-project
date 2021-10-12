@@ -9,8 +9,6 @@ type Wallet struct {
 	Credit	int	`gorm:"column:credit" json:"credit"`
 }
 
-type WalletList	[]Wallet
-
 type Model struct {
 	database	*gorm.DB
 }
